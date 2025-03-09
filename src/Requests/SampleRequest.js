@@ -1,16 +1,16 @@
+const { blue } = require("console-log-colors");
 const express = require("express");
-const { magenta } = require("console-log-colors");
 
 module.exports = {
   /**
-   * Sample middleware.
+   * Sample request.
    *
    * @param {express.Request} req
    * @param {express.Response} res
    * @param {express.NextFunction} next
    */
   test: function (req, res, next) {
-    console.log(magenta("[API MIDDLEWARE] test"));
+    console.log(blue("Validate request here"));
     next();
   },
 };

@@ -1,14 +1,14 @@
-const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const { red } = require("console-log-colors");
-const WebRouter = require("./Router/WebRouter");
-const ApiRouter = require("./Router/ApiRouter");
+const { webRouter } = require("./Router/WebRouter");
+const { apiRouter } = require("./Router/ApiRouter");
 const GlobalMiddleware = require("./Middlewares/GlobalMiddleware");
 const WebMiddleware = require("./Middlewares/WebMiddleware");
 const ApiMiddleware = require("./Middlewares/ApiMiddleware");
+const NotFoundException = require("./Exceptions/NotFoundException");
 
 // app setup
 const app = express();
@@ -26,26 +26,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "../public")));
-app.use(GlobalMiddleware.isBot);
+
+// global middleware setup
+Object.values(GlobalMiddleware).forEach((middleware) => {
+  app.use(middleware);
+});
 
 // web route setup
-app.use("/", WebMiddleware.test, WebRouter);
+app.use("/", ...Object.values(WebMiddleware), webRouter);
 
 // api route setup
-app.use("/api", ApiMiddleware.test, ApiRouter);
+app.use("/api", ...Object.values(ApiMiddleware), apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  throw new NotFoundException();
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(red(err));
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-  res.status(err.status || 500);
-  res.render("ErrorPage");
+  console.log(red("[ERROR]: " + JSON.stringify(err)));
+  const status = err.status || 500;
+  const message = err.message || "Internal Server Error";
+  const outputDetails = err.details || err || {};
+  const details = req.app.get("env") === "development" ? outputDetails : {};
+  res.status(status).json({ status, message, details });
 });
 
 // export app

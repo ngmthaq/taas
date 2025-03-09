@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack --mode production --progress && cross-env DEBUG=express-server:* NODE_ENV=production node ./bin/www",
+    "build": "webpack --mode production --progress",
+    "start": "cross-env DEBUG=express-server:* NODE_ENV=production node ./bin/www",
     "dev:server": "cross-env DEBUG=express-server:* NODE_ENV=development nodemon ./bin/www",
     "dev:client": "webpack --mode development --watch --progress",
     "format:check": "prettier --check .",

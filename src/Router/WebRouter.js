@@ -1,7 +1,18 @@
 const express = require("express");
-const router = express.Router();
+const webRouter = express.Router();
 const HomeController = require("../Controllers/HomeController");
 
-router.get("/", HomeController.renderHomePage);
+const web = [
+  {
+    method: "get",
+    path: "/",
+    middlewares: [],
+    controller: HomeController.renderHomePage,
+  },
+];
 
-module.exports = router;
+web.forEach((route) => {
+  webRouter[route.method](route.path, ...route.middlewares, route.controller);
+});
+
+module.exports = { webRouter, web };

@@ -1,4 +1,5 @@
 const express = require("express");
+const { magenta } = require("console-log-colors");
 
 module.exports = {
   /**
@@ -9,6 +10,7 @@ module.exports = {
    * @param {express.NextFunction} next
    */
   test: function (req, res, next) {
+    console.log(magenta("[WEB MIDDLEWARE] test"));
     next();
   },
 };

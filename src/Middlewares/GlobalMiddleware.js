@@ -1,7 +1,6 @@
 const express = require("express");
 const { isbot } = require("isbot");
-
-const SEO_PAGES = ["/"];
+const { magenta } = require("console-log-colors");
 
 module.exports = {
   /**
@@ -12,11 +11,12 @@ module.exports = {
    * @param {express.NextFunction} next
    */
   isBot: function (req, res, next) {
-    if (req.originalUrl.startsWith("/api")) return next();
-    const userAgent = req.get("user-agent");
-    const isBot = isbot(userAgent);
-    const isSEOPage = SEO_PAGES.includes(req.originalUrl);
-    if (isBot && isSEOPage) return next();
-    return res.render("ReactApp");
+    const isApi = req.originalUrl.startsWith("/api");
+    console.log(magenta("[GLOBAL MIDDLEWARE] isApi: " + isApi));
+    if (isApi) return next();
+    const isBot = isbot(req.get("user-agent"));
+    console.log(magenta("[GLOBAL MIDDLEWARE] isBot: " + isBot));
+    if (!isBot) return res.render("ReactApp");
+    return next();
   },
 };
