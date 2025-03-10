@@ -62,3 +62,4 @@ typings/
 
 # React bundle output
 public/dist/*
+client/routeTree.jsx
