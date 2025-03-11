@@ -13,6 +13,10 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.__REACT_LOCALES__ = JSON.parse(`<%- JSON.stringify(locales) %>`);
+      window.__REACT_LOCALE_RESOURCES__ = JSON.parse(`<%- JSON.stringify(resources) %>`);
+    </script>
     <script src="/dist/main.bundle.js?t=<%= Date.now() %>"></script>
   </body>
 </html>

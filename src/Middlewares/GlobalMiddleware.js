@@ -1,6 +1,8 @@
 const express = require("express");
 const { isbot } = require("isbot");
 const { magenta } = require("console-log-colors");
+const enUS = require("../Localization/enUS");
+const viVN = require("../Localization/viVN");
 
 module.exports = {
   /**
@@ -16,7 +18,12 @@ module.exports = {
     if (isApi) return next();
     const isBot = isbot(req.get("user-agent"));
     console.log(magenta("[GLOBAL MIDDLEWARE] isBot: " + isBot));
-    if (!isBot) return res.render("ReactApp");
+    const locales = { enUS, viVN };
+    const resources = {
+      [enUS.key]: enUS.resources,
+      [viVN.key]: viVN.resources,
+    };
+    if (!isBot) return res.render("ReactApp", { locales, resources });
     return next();
   },
 };
