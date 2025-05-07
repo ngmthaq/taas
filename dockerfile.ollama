@@ -1,0 +1,25 @@
+FROM ollama/ollama:latest
+
+ARG OLLAMA_LLM_MODEL
+
+ARG OLLAMA_EMBEDDING_MODEL
+
+ENV OLLAMA_LLM_MODEL=${OLLAMA_LLM_MODEL}
+
+ENV OLLAMA_EMBEDDING_MODEL=${OLLAMA_EMBEDDING_MODEL}
+
+RUN apt-get update -y && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 11434
+
+RUN echo '#!/bin/sh \n\
+    ollama serve & \n\
+    sleep 10 \n\
+    echo "Pulling ${OLLAMA_LLM_MODEL} model..." \n\
+    ollama pull ${OLLAMA_LLM_MODEL} \n\
+    echo "Pulling ${OLLAMA_EMBEDDING_MODEL} model..." \n\
+    ollama pull ${OLLAMA_EMBEDDING_MODEL} \n\
+    wait' > /start.sh && \
+    chmod +x /start.sh
+
+ENTRYPOINT ["/start.sh"]
