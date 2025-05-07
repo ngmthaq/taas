@@ -7,12 +7,11 @@ require("dotenv").config();
 const { red, green } = require("console-log-colors");
 const http = require("http");
 const app = require("../src/app");
-const { testDatabaseConnection } = require("../src/Services/DatabaseService");
 
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.APP_PORT || "3000");
 app.set("port", port);
 
 /**
@@ -47,11 +46,9 @@ function onError(error) {
     case "EACCES":
       console.log(red(bind + " requires elevated privileges"));
       process.exit(1);
-      break;
     case "EADDRINUSE":
       console.log(red(bind + " is already in use"));
       process.exit(1);
-      break;
     default:
       throw error;
   }
@@ -64,5 +61,4 @@ function onListening() {
   const addr = server.address();
   console.clear();
   console.log(green("App is listening on http://localhost:" + addr.port));
-  testDatabaseConnection();
 }

@@ -20,7 +20,6 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "isbot": "^5.1.23",
-    "mongodb": "^6.14.0",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
