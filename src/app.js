@@ -3,12 +3,9 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const { red } = require("console-log-colors");
-const { webRouter } = require("./Router/WebRouter");
-const { apiRouter } = require("./Router/ApiRouter");
-const GlobalMiddleware = require("./Middlewares/GlobalMiddleware");
-const WebMiddleware = require("./Middlewares/WebMiddleware");
-const ApiMiddleware = require("./Middlewares/ApiMiddleware");
+const IsBotMiddleware = require("./Middlewares/IsBotMiddleware");
 const NotFoundException = require("./Exceptions/NotFoundException");
+const HomeController = require("./Controller/HomeController");
 
 // app setup
 const app = express();
@@ -26,17 +23,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "../public")));
+app.use(IsBotMiddleware);
 
-// global middleware setup
-Object.values(GlobalMiddleware).forEach((middleware) => {
-  app.use(middleware);
-});
-
-// web route setup
-app.use("/", ...Object.values(WebMiddleware), webRouter);
-
-// api route setup
-app.use("/api", ...Object.values(ApiMiddleware), apiRouter);
+// routes setup
+app.use("/", HomeController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
