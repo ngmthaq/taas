@@ -63,3 +63,7 @@ typings/
 # React bundle output
 public/dist/*
 client/routeTree.jsx
+
+# Prisma generated files
+prisma/generated/
+prisma/dev.db-journal
