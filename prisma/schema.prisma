@@ -12,7 +12,123 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  password        String
+  name            String
+  dob             DateTime
+  gender          String           @default("OTHER") // Enum: MALE, FEMALE, OTHER
+  avatarPath      String?
+  role            String           @default("USER") // Enum: ADMIN, MANAGER, USER, BOT
+  candidates      Candidate[]
+  jobs            Job[]
+  candidateChats  CandidateChat[]
+  jobChats        JobChat[]
+  regularChats    RegularChat[]
+  regularMessages RegularMessage[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+}
+
+model Candidate {
+  id              Int             @id @default(autoincrement())
+  name            String?
+  email           String?
+  phoneNumber     String?
+  dob             DateTime?
+  address         String?
+  education       String?
+  certs           String?
+  yoe             Int?
+  skills          String?
+  cvPath          String?
+  gender          String          @default("OTHER") // Enum: MALE, FEMALE, OTHER
+  additionalInfo  String?
+  createdBy       User            @relation(fields: [createdByUserId], references: [id])
+  createdByUserId Int
+  candidateChats  CandidateChat[]
+  jobs            JobCandidate[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+}
+
+model Job {
+  id              Int            @id @default(autoincrement())
+  title           String
+  numPositions    Int?
+  salary          Float?
+  description     String?
+  requirements    String?
+  benefits        String?
+  location        String?
+  workingTime     String?
+  startDate       DateTime?
+  endDate         DateTime?
+  status          String         @default("OPEN") // Enum: OPEN, CLOSED
+  color           String         @default("#FFFFFF")
+  parentJob       Job?           @relation("ParentJob", fields: [parentId], references: [id])
+  parentId        Int?
+  childJobs       Job[]          @relation("ParentJob")
+  createdBy       User           @relation(fields: [createdByUserId], references: [id])
+  createdByUserId Int
+  jobChats        JobChat[]
+  candidates      JobCandidate[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+}
+
+model JobCandidate {
+  job         Job       @relation(fields: [jobId], references: [id])
+  jobId       Int
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId Int
+  status      String    @default("APPLIED") // Enum: APPLIED, INTERVIEWED, ONBOARDING, REJECTED, SUSPENDED
+
+  @@id([jobId, candidateId])
+}
+
+model JobChat {
+  id        Int      @id @default(autoincrement())
+  job       Job      @relation(fields: [jobId], references: [id])
+  jobId     Int
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  Int
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CandidateChat {
+  id          Int       @id @default(autoincrement())
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  candidateId Int
+  sender      User      @relation(fields: [senderId], references: [id])
+  senderId    Int
+  message     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model RegularChat {
+  id        Int              @id @default(autoincrement())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    Int
+  title     String
+  messages  RegularMessage[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model RegularMessage {
+  id        Int         @id @default(autoincrement())
+  sender    User        @relation(fields: [senderId], references: [id])
+  senderId  Int
+  message   String
+  group     RegularChat @relation(fields: [groupId], references: [id])
+  groupId   Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
