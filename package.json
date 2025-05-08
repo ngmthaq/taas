@@ -7,7 +7,9 @@
     "start": "cross-env DEBUG=express-server:* NODE_ENV=production node ./bin/www",
     "dev:server": "cross-env DEBUG=express-server:* NODE_ENV=development nodemon ./bin/www",
     "dev:client": "concurrently \"tsr watch\" \"webpack --mode development --watch\"",
-    "dev:db": "prisma studio",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write ."
   },

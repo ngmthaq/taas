@@ -66,4 +66,5 @@ client/routeTree.jsx
 
 # Prisma generated files
 prisma/generated/
-prisma/dev.db-journal
+prisma/*.db
+prisma/*.db-journal
