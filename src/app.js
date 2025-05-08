@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const { red } = require("console-log-colors");
+const clc = require("console-log-colors");
 const IsBotMiddleware = require("./Middlewares/IsBotMiddleware");
 const NotFoundException = require("./Exceptions/NotFoundException");
 const HomeController = require("./Controller/HomeController");
@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(red("[ERROR]: " + JSON.stringify(err)));
+  console.log(clc.red("[ERROR]: " + JSON.stringify(err)));
   const status = err.status || 500;
   const message = err.message || "Internal Server Error";
   const outputDetails = err.details || err || {};

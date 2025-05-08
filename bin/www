@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 require("dotenv").config();
-const { red, green } = require("console-log-colors");
+const clc = require("console-log-colors");
 const http = require("http");
 const app = require("../src/app");
 
@@ -44,10 +44,10 @@ function onError(error) {
   const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
   switch (error.code) {
     case "EACCES":
-      console.log(red(bind + " requires elevated privileges"));
+      console.log(clc.red(bind + " requires elevated privileges"));
       process.exit(1);
     case "EADDRINUSE":
-      console.log(red(bind + " is already in use"));
+      console.log(clc.red(bind + " is already in use"));
       process.exit(1);
     default:
       throw error;
@@ -60,5 +60,5 @@ function onError(error) {
 function onListening() {
   const addr = server.address();
   console.clear();
-  console.log(green("App is listening on http://localhost:" + addr.port));
+  console.log(clc.green("App is listening on http://localhost:" + addr.port));
 }
