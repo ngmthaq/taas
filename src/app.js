@@ -6,6 +6,8 @@ const clc = require("console-log-colors");
 const IsBotMiddleware = require("./Middlewares/IsBotMiddleware");
 const NotFoundException = require("./Exceptions/NotFoundException");
 const HomeController = require("./Controller/HomeController");
+const AuthController = require("./Controller/Api/AuthController");
+const UserController = require("./Controller/Api/UserController");
 
 // app setup
 const app = express();
@@ -27,6 +29,8 @@ app.use(IsBotMiddleware);
 
 // routes setup
 app.use("/", HomeController);
+app.use("/api/v1/auth", AuthController);
+app.use("/api/v1/users", UserController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
