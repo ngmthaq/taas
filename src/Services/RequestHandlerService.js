@@ -7,10 +7,10 @@ const express = require("express");
  * @param {express.RequestHandler} callback - Express route handler function
  * @returns {express.RequestHandler} - Wrapped handler with Promise error catching
  */
-function RHS(callback) {
-  return function (req, res, next) {
+const RHS = (callback) => {
+  return (req, res, next) => {
     return Promise.resolve(callback(req, res, next)).catch(next);
   };
-}
+};
 
 module.exports = { RHS };

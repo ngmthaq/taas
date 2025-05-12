@@ -33,12 +33,12 @@ app.use("/api/v1/auth", AuthController);
 app.use("/api/v1/users", UserController);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   throw new NotFoundException();
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   const status = err.status || 500;
   const message = err.message || "Internal Server Error";
   const outputDetails = err.details || err || {};

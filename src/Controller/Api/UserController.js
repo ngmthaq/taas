@@ -1,6 +1,6 @@
 const express = require("express");
-const PaginationMiddleware = require("../../Middlewares/PaginationMiddleware");
 const { RHS } = require("../../Services/RequestHandlerService");
+const PaginationMiddleware = require("../../Middlewares/PaginationMiddleware");
 const NotFoundException = require("../../Exceptions/NotFoundException");
 const BadRequestException = require("../../Exceptions/BadRequestException");
 const UserRepository = require("../../Repositories/UserRepository");
