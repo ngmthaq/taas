@@ -1,8 +1,13 @@
 const express = require("express");
+const { RHS } = require("../Services/RequestHandlerService");
+
 const HomeController = express.Router();
 
-HomeController.get("/", (req, res) => {
-  res.send("Welcome to the Home Page, BOT!");
-});
+HomeController.get(
+  "/",
+  RHS((req, res) => {
+    res.send("Welcome to the Home Page, BOT!");
+  }),
+);
 
 module.exports = HomeController;

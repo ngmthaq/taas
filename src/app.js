@@ -39,11 +39,11 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(clc.red("[ERROR]: " + JSON.stringify(err)));
   const status = err.status || 500;
   const message = err.message || "Internal Server Error";
   const outputDetails = err.details || err || {};
   const details = req.app.get("env") === "development" ? outputDetails : {};
+  if (status === 500) console.log(clc.red("[ERROR]: " + JSON.stringify(err)));
   res.status(status).json({ status, message, details });
 });
 

@@ -1,14 +1,7 @@
-const express = require("express");
+const { RHS } = require("../Services/RequestHandlerService");
 const BadRequestException = require("../Exceptions/BadRequestException");
 
-/**
- *
- * @param {express.Request} req
- * @param {express.Response} res
- * @param {express.NextFunction} next
- * @returns
- */
-const PaginationMiddleware = (req, res, next) => {
+const PaginationMiddleware = RHS((req, res, next) => {
   let { filter, sortCol, sortDir, page, take, withTrash } = req.query;
 
   if (!filter) filter = "";
@@ -77,6 +70,6 @@ const PaginationMiddleware = (req, res, next) => {
   req.query.take = take;
   req.query.withTrash = withTrash === "true" ? true : false;
   next();
-};
+});
 
 module.exports = PaginationMiddleware;
