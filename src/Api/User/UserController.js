@@ -1,15 +1,15 @@
 const express = require("express");
-const { RHS } = require("../../Services/RequestHandlerService");
-const PaginationMiddleware = require("../../Middlewares/PaginationMiddleware");
-const NotFoundException = require("../../Exceptions/NotFoundException");
-const BadRequestException = require("../../Exceptions/BadRequestException");
-const UserRepository = require("../../Repositories/UserRepository");
+const { RHS } = require("../../@Core/Services/RequestHandlerService");
+const NotFoundException = require("../../@Core/Exceptions/NotFoundException");
+const PaginationValidator = require("../../@Core/Validators/PaginationValidator");
+const UserRepository = require("./UserRepository");
+const UserIdValidator = require("./UserIdValidator");
 
 const UserController = express.Router();
 
 UserController.get(
   "/",
-  PaginationMiddleware,
+  PaginationValidator,
   RHS(async (req, res) => {
     const repo = new UserRepository();
     const response = await repo.findAll(
@@ -27,16 +27,7 @@ UserController.get(
 
 UserController.get(
   "/:id",
-  RHS(async (req, res, next) => {
-    const id = Number(req.params.id);
-    const errorMessage = "Please provide correct user id";
-    if (isNaN(id)) throw new BadRequestException({ userId: errorMessage });
-    if (id < 1) throw new BadRequestException({ userId: errorMessage });
-    req.params.id = id;
-    if (req.query.withTrash === "true") req.query.withTrash = true;
-    else req.query.withTrash = false;
-    next();
-  }),
+  UserIdValidator,
   RHS(async (req, res) => {
     const repo = new UserRepository();
     const user = await repo.findById(req.params.id, req.query.withTrash);
@@ -48,6 +39,7 @@ UserController.get(
 
 UserController.post(
   "/",
+  RHS((req, res) => {}),
   RHS((req, res) => {}),
 );
 

@@ -1,4 +1,4 @@
-const { prisma } = require("../Services/DatabaseService");
+const { prisma } = require("../../@Core/Services/DatabaseService");
 
 class UserRepository {
   async findAll(filter, sortCol, sortDir, page, take, withTrash = false) {

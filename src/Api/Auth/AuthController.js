@@ -1,5 +1,5 @@
 const express = require("express");
-const { RHS } = require("../../Services/RequestHandlerService");
+const { RHS } = require("../../@Core/Services/RequestHandlerService");
 
 const AuthController = express.Router();
 

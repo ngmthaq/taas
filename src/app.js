@@ -3,11 +3,11 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const clc = require("console-log-colors");
-const IsBotMiddleware = require("./Middlewares/IsBotMiddleware");
-const NotFoundException = require("./Exceptions/NotFoundException");
-const HomeController = require("./Controller/HomeController");
-const AuthController = require("./Controller/Api/AuthController");
-const UserController = require("./Controller/Api/UserController");
+const IsBotMiddleware = require("./@Core/Middlewares/IsBotMiddleware");
+const NotFoundException = require("./@Core/Exceptions/NotFoundException");
+const HomeController = require("./Home/HomeController");
+const AuthController = require("./Api/Auth/AuthController");
+const UserController = require("./Api/User/UserController");
 
 // app setup
 const app = express();
@@ -15,8 +15,8 @@ const app = express();
 // view engine setup
 app.set("view engine", "ejs");
 app.set("views", [
-  path.resolve(__dirname, "./Views/CSR"),
-  path.resolve(__dirname, "./Views/SSR"),
+  path.resolve(__dirname, "./@Core/Views/CSR"),
+  path.resolve(__dirname, "./@Core/Views/SSR"),
 ]);
 
 // middleware setup
