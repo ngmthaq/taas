@@ -1,7 +1,8 @@
 const express = require("express");
 const { RHS } = require("../../@Core/Services/RequestHandlerService");
-const NotFoundException = require("../../@Core/Exceptions/NotFoundException");
 const PaginationValidator = require("../../@Core/Validators/PaginationValidator");
+const AuthenticationMiddleware = require("../Auth/AuthenticationMiddleware");
+const AuthorizationMiddleware = require("../Auth/AuthorizationMiddleware");
 const UserRepository = require("./UserRepository");
 const UserIdValidator = require("./UserIdValidator");
 const UserCreationValidator = require("./UserCreationValidator");
@@ -10,6 +11,8 @@ const UserController = express.Router();
 
 UserController.get(
   "/",
+  AuthenticationMiddleware,
+  AuthorizationMiddleware.isManager,
   PaginationValidator,
   RHS(async (req, res) => {
     const repo = new UserRepository();
@@ -28,6 +31,8 @@ UserController.get(
 
 UserController.get(
   "/:id",
+  AuthenticationMiddleware,
+  AuthorizationMiddleware.isManager,
   UserIdValidator,
   RHS(async (req, res) => {
     const repo = new UserRepository();
@@ -39,6 +44,8 @@ UserController.get(
 
 UserController.post(
   "/",
+  AuthenticationMiddleware,
+  AuthorizationMiddleware.isManager,
   UserCreationValidator.ValidateCreateUser,
   RHS(async (req, res) => {
     const repo = new UserRepository();
@@ -50,6 +57,8 @@ UserController.post(
 
 UserController.put(
   "/:id",
+  AuthenticationMiddleware,
+  AuthorizationMiddleware.isManager,
   UserIdValidator,
   UserCreationValidator.ValidateUpdateUser,
   RHS(async (req, res) => {
@@ -62,6 +71,8 @@ UserController.put(
 
 UserController.delete(
   "/:id",
+  AuthenticationMiddleware,
+  AuthorizationMiddleware.isManager,
   UserIdValidator,
   RHS(async (req, res) => {
     const repo = new UserRepository();

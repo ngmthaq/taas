@@ -3,7 +3,7 @@ const UnauthorizedException = require("../../@Core/Exceptions/UnauthorizedExcept
 const TokenService = require("../../@Core/Services/TokenService");
 const AuthRepository = require("./AuthRepository");
 
-const AuthMiddleware = RHS(async (req, res, next) => {
+const AuthenticationMiddleware = RHS(async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     throw new UnauthorizedException({
@@ -26,7 +26,14 @@ const AuthMiddleware = RHS(async (req, res, next) => {
     });
 
   const decoded = TokenService.verifyAccessToken(token);
-  const userId = decoded?.id;
+
+  if (!decoded) {
+    throw new UnauthorizedException({
+      token: "Invalid or expired token",
+    });
+  }
+
+  const userId = decoded.id;
   if (!userId) {
     throw new UnauthorizedException({
       userId: "User ID is missing in token",
@@ -45,4 +52,4 @@ const AuthMiddleware = RHS(async (req, res, next) => {
   next();
 });
 
-module.exports = AuthMiddleware;
+module.exports = AuthenticationMiddleware;

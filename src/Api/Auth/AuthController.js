@@ -4,13 +4,13 @@ const TokenService = require("../../@Core/Services/TokenService");
 const BadRequestException = require("../../@Core/Exceptions/BadRequestException");
 const AuthLoginValidator = require("./AuthLoginValidator");
 const AuthRepository = require("./AuthRepository");
-const AuthMiddleware = require("./AuthMiddleware");
+const AuthenticationMiddleware = require("./AuthenticationMiddleware");
 
 const AuthController = express.Router();
 
 AuthController.get(
   "/whoami",
-  AuthMiddleware,
+  AuthenticationMiddleware,
   RHS((req, res) => {
     return res.json(req.user);
   }),
@@ -42,6 +42,7 @@ AuthController.post(
 
 AuthController.post(
   "/password/change",
+  AuthenticationMiddleware,
   RHS((req, res) => {}),
 );
 
@@ -62,6 +63,7 @@ AuthController.post(
 
 AuthController.post(
   "/logout",
+  AuthenticationMiddleware,
   RHS((req, res) => {}),
 );
 

@@ -28,7 +28,14 @@ const verifyAccessToken = (token) => {
 
     return decoded;
   } catch (error) {
-    console.error("Token verification failed:", error.message);
+    if (error instanceof jwt.TokenExpiredError) {
+      console.error("Token has expired");
+    } else if (error instanceof jwt.JsonWebTokenError) {
+      console.error("Invalid token:", error.message);
+    } else {
+      console.error("Token verification failed:", error.message);
+    }
+
     return null;
   }
 };
