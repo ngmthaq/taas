@@ -1,4 +1,7 @@
 const { prisma } = require("../../@Core/Services/DatabaseService");
+const { encrypt } = require("../../@Core/Services/EncryptionService");
+const USER_DEFAULT_PASSWORD = require("./UserDefaultPassword");
+const USER_ROLE = require("./UserRole");
 
 class UserRepository {
   async findAll(filter, sortCol, sortDir, page, take, withTrash = false) {
@@ -62,7 +65,16 @@ class UserRepository {
   }
 
   async create(data) {
-    const user = await prisma.user.create({ data });
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        password: encrypt(USER_DEFAULT_PASSWORD.USER),
+        dob: data.dob,
+        gender: data.gender,
+        role: USER_ROLE.USER,
+      },
+    });
 
     return this.removePassword(user);
   }
@@ -70,7 +82,11 @@ class UserRepository {
   async update(id, data) {
     const user = await prisma.user.update({
       where: { id },
-      data,
+      data: {
+        name: data.name,
+        dob: data.dob,
+        gender: data.gender,
+      },
     });
 
     return this.removePassword(user);

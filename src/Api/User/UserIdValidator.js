@@ -1,12 +1,18 @@
 const { param, query, validationResult } = require("express-validator");
 const { RHS } = require("../../@Core/Services/RequestHandlerService");
 const BadRequestException = require("../../@Core/Exceptions/BadRequestException");
+const UserRepository = require("./UserRepository");
 
 const UserIdValidator = [
   param("id")
     .isInt({ min: 1 })
     .withMessage("Please provide correct user id")
-    .toInt(),
+    .toInt()
+    .custom(async (value) => {
+      const repo = new UserRepository();
+      const user = await repo.findById(value);
+      if (!user) throw new Error("User not found");
+    }),
 
   query("withTrash")
     .optional()

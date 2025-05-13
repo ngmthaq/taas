@@ -7,47 +7,42 @@ const PaginationValidator = [
     .optional()
     .isString()
     .withMessage("Filter must be a string")
-    .trim()
-    .default(""),
+    .trim(),
 
   query("sortCol")
     .optional()
     .isString()
     .withMessage("Sort column must be a string")
-    .trim()
-    .default("id"),
+    .trim(),
 
   query("sortDir")
     .optional()
     .isString()
     .withMessage("Sort direction must be a string")
     .isIn(["asc", "desc"])
-    .withMessage("Sort direction must be either asc or desc")
-    .default("asc"),
+    .withMessage("Sort direction must be either asc or desc"),
 
   query("page")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Page must be a number greater than 0")
-    .toInt()
-    .default(1),
+    .toInt(),
 
   query("take")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Take must be a number greater than 0")
-    .toInt()
-    .default(10),
+    .toInt(),
 
   query("withTrash")
     .optional()
     .isBoolean()
     .withMessage("With trash must be either true or false")
-    .toBoolean()
-    .default(false),
+    .toBoolean(),
 
   RHS((req, res, next) => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       const formattedErrors = {};
       errors.array().forEach((error) => {
@@ -56,6 +51,13 @@ const PaginationValidator = [
 
       throw new BadRequestException(formattedErrors);
     }
+
+    req.query.filter = req.query.filter || "";
+    req.query.sortCol = req.query.sortCol || "id";
+    req.query.sortDir = req.query.sortDir || "asc";
+    req.query.page = req.query.page ? parseInt(req.query.page) : 1;
+    req.query.take = req.query.take ? parseInt(req.query.take) : 10;
+    req.query.withTrash = req.query.withTrash === "true" ? true : false;
 
     next();
   }),
