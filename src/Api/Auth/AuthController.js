@@ -1,16 +1,43 @@
 const express = require("express");
 const { RHS } = require("../../@Core/Services/RequestHandlerService");
+const TokenService = require("../../@Core/Services/TokenService");
+const BadRequestException = require("../../@Core/Exceptions/BadRequestException");
+const AuthLoginValidator = require("./AuthLoginValidator");
+const AuthRepository = require("./AuthRepository");
+const AuthMiddleware = require("./AuthMiddleware");
 
 const AuthController = express.Router();
 
 AuthController.get(
   "/whoami",
-  RHS((req, res) => {}),
+  AuthMiddleware,
+  RHS((req, res) => {
+    return res.json(req.user);
+  }),
 );
 
 AuthController.post(
   "/login",
-  RHS((req, res) => {}),
+  AuthLoginValidator,
+  RHS(async (req, res) => {
+    const repo = new AuthRepository();
+    const user = await repo.login(req.body.email, req.body.password);
+    if (!user) {
+      throw new BadRequestException({
+        credential: "Invalid email or password",
+      });
+    }
+
+    const accessToken = TokenService.createAccessToken(user);
+    const refreshToken = TokenService.createRefreshToken();
+    await repo.saveRefreshToken(user.id, refreshToken);
+
+    return res.json({
+      user,
+      accessToken,
+      refreshToken,
+    });
+  }),
 );
 
 AuthController.post(

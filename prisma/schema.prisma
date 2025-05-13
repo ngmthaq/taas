@@ -27,9 +27,20 @@ model User {
   jobChats        JobChat[]
   regularChats    RegularChat[]
   regularMessages RegularMessage[]
+  refreshTokens   RefreshToken[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   deletedAt       DateTime?
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
 }
 
 model Candidate {
