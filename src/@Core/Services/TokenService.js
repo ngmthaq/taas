@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
+const clc = require("console-log-colors");
 
 const SECRET_KEY = process.env.APP_ENCRYPTION_KEY;
 if (!SECRET_KEY) {
@@ -29,11 +30,11 @@ const verifyAccessToken = (token) => {
     return decoded;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      console.error("Token has expired");
+      console.log(clc.red("Token has expired"));
     } else if (error instanceof jwt.JsonWebTokenError) {
-      console.error("Invalid token:", error.message);
+      console.log(clc.red("Invalid token:", error.message));
     } else {
-      console.error("Token verification failed:", error.message);
+      console.log(clc.red("Token verification failed:", error.message));
     }
 
     return null;
