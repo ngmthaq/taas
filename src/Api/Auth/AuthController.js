@@ -5,6 +5,8 @@ const BadRequestException = require("../../@Core/Exceptions/BadRequestException"
 const AuthLoginValidator = require("./AuthLoginValidator");
 const AuthRepository = require("./AuthRepository");
 const AuthenticationMiddleware = require("./AuthenticationMiddleware");
+const AuthChangePasswordValidator = require("./AuthChangePasswordValidator");
+const AuthRefreshTokenValidator = require("./AuthRefreshTokenValidator");
 
 const AuthController = express.Router();
 
@@ -24,7 +26,7 @@ AuthController.post(
     const user = await repo.login(req.body.email, req.body.password);
     if (!user) {
       throw new BadRequestException({
-        credential: "Invalid email or password",
+        credentials: "Invalid email or password",
       });
     }
 
@@ -43,7 +45,13 @@ AuthController.post(
 AuthController.post(
   "/password/change",
   AuthenticationMiddleware,
-  RHS((req, res) => {}),
+  AuthChangePasswordValidator,
+  RHS(async (req, res) => {
+    const repo = new AuthRepository();
+    const user = await repo.changePassword(req.user.id, req.body.newPassword);
+
+    return res.json(user);
+  }),
 );
 
 AuthController.post(
@@ -58,7 +66,13 @@ AuthController.post(
 
 AuthController.post(
   "/token/refresh",
-  RHS((req, res) => {}),
+  AuthRefreshTokenValidator,
+  RHS(async (req, res) => {
+    const repo = new AuthRepository();
+    const tokens = await repo.refreshToken(req.body.refreshToken);
+
+    return res.json(tokens);
+  }),
 );
 
 AuthController.post(
