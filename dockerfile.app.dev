@@ -21,4 +21,4 @@ EXPOSE ${APP_PORT}
 
 RUN yarn format:check
 
-CMD ["npx", "concurrently", "yarn:dev:client", "yarn:dev:server"]
+CMD ["npx", "concurrently", "yarn dev:client", "yarn dev:server"]
